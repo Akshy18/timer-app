@@ -67,6 +67,7 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
         });
       }, 1000);
     } else if (time === 0 && isRunning) {
+      console.log('helooo finished')
       setHalfwayAlert(false)
       setAlertModal(true)
        handleHistory(name, seconds);
@@ -177,8 +178,10 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
     handleDelete(category[0], id);
   };
 
-  const onCancel = ()=>{
-    setAlertModal(false)
+  const onCancel = (name)=>{
+
+    
+    name === 'Reminder !!!' ? setHalfwayAlert(false) : setAlertModal(false)
   }
 
   return (

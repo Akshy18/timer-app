@@ -53,5 +53,5 @@ A feature-rich React timer application for creating and managing customizable ti
 git clone https://github.com/Akshy18/timer-app.git
 cd timer-app
 npm install
-npm start
+npm run dev
 

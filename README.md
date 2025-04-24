@@ -17,10 +17,6 @@ A feature-rich React timer application for creating and managing customizable ti
 - 🗑️ **Delete Options**: Remove individual timers or entire categories.
 - 💾 **Data Persistence**: Store timers, categories, and history in localStorage.
 
-## 📸 Screenshots
-
-*(Add screenshots of the app here to showcase the UI, e.g., timer list, focus mode, history view.)*
-
 ## 🚀 Quick Start
 
 ### Prerequisites

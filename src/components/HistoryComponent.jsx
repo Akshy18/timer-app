@@ -1,29 +1,36 @@
 import { useState } from "react";
 
 const HistoryComponent = () => {
+  // Grab history items from local storage or use empty array if none exist
   const [historyItems, setHistoryItems] = useState(
     JSON.parse(localStorage.getItem("history")) || []
   );
 
   const handleDelete = (index) => {
+    // Create a copy of our history array so we don't modify state directly
     const updatedHistory = [...historyItems];
 
-     updatedHistory.splice(index, 1);
+    // Remove the selected item from our history
+    updatedHistory.splice(index, 1);
 
+    // Update our state with the new history (item removed)
     setHistoryItems(updatedHistory);
 
+    // Save the updated history back to local storage
     localStorage.setItem("history", JSON.stringify(updatedHistory));
   };
 
   return (
     <>
       <div className="w-full h-screen flex flex-col items-center bg-gray-100">
+        {/* Show a message when history is empty */}
         {historyItems.length === 0 && (
           <div className="h-[80vh] w-full flex items-center justify-center text-2xl font-bold text-gray-500">
             No history available
           </div>
         )}
 
+        {/* Map through and display each history item */}
         {historyItems.map((item, index) => (
           <div
             key={index}

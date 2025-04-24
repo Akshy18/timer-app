@@ -180,13 +180,13 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
 
   const onCancel = (name)=>{
 
-    
+
     name === 'Reminder !!!' ? setHalfwayAlert(false) : setAlertModal(false)
   }
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between p-4 space-x-4">
+      <div className="flex items-center justify-between pt-2 space-x-4">
        {window.innerWidth > 640 && <div className="h-2 w-[40%] bg-gray-400 min-w-[30%] rounded-md">
           <div
             className="h-full bg-indigo-600 rounded-md"

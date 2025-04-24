@@ -9,9 +9,9 @@ const CardComponent = ({ name, seconds, handleDelete, category, id }) => {
       }`}
     >
       <div
-        className={`text-lg font-medium md:text-xl 2xl:min-w-[30rem] truncate ${
+        className={`text-lg font-medium md:text-xl 2xl:min-w-[30rem] truncate min-h-[2rem]  ${
           window.innerWidth <= 640 ? "w-full text-center" : "w-[20rem] "
-        } `}
+        } `} 
       >
         {name}
       </div>

@@ -7,7 +7,8 @@ const HistoryComponent = () => {
 
   const handleDelete = (index) => {
     const updatedHistory = [...historyItems];
-    updatedHistory.splice(index, 1);
+
+     updatedHistory.splice(index, 1);
 
     setHistoryItems(updatedHistory);
 
@@ -26,18 +27,18 @@ const HistoryComponent = () => {
         {historyItems.map((item, index) => (
           <div
             key={index}
-            className="h-[10vh] w-[80%] flex items-center p-4 border-b-2 rounded-xl border-gray-400 shadow-xl justify-between mx-3"
+            className="h-[10vh] w-[90%] flex items-center p-4 border-b-2 rounded-xl border-gray-400 shadow-xl justify-between mx-3"
           >
-            <div className=" text-2xl">
+            <div className="sm:text-xl md:text-2xl text-sm font-medium">
               {index + 1}. {item.name}
             </div>
             <div className="flex items-center space-x-4">
-              <div className=" text-2xl font-bold mr-5">
+              <div className=" sm:text-xl md:text-2xl text-sm font-bold mr-5">
                 {item.formatedTime}
               </div>
               <button
-                onClick={handleDelete}
-                className="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                onClick={()=>handleDelete(index)}
+                className="md:px-3 md:py-2 py-1 px-2  border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 delete
               </button>

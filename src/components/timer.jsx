@@ -1,60 +1,93 @@
 import React, { useState, useRef, useEffect } from "react";
 import CircularProgressBar from "./CircularProgressBar.jsx";
+import AlertComponent from "./AlertComponent.jsx";
 
 const Timer = ({ seconds, handleDelete, name, category, id }) => {
+  
   const [time, setTime] = useState(() => {
     const savedTimers = JSON.parse(localStorage.getItem("timerStates")) || {};
     return savedTimers[id]?.time !== undefined ? savedTimers[id].time : seconds;
   });
 
+  
   const [isRunning, setIsRunning] = useState(() => {
     const savedTimers = JSON.parse(localStorage.getItem("timerStates")) || {};
-    return savedTimers[id]?.isRunning || false;
+    const savedTime = savedTimers[id]?.time !== undefined ? savedTimers[id].time : seconds;
+    return savedTime > 0 ? (savedTimers[id]?.isRunning || false) : false;
   });
 
   const timerRef = useRef(null);
+  
+
   const [progress, setProgress] = useState(() => {
     const savedTimers = JSON.parse(localStorage.getItem("timerStates")) || {};
-    return savedTimers[id]?.progress !== undefined
-      ? savedTimers[id].progress
-      : 100;
+    if (savedTimers[id]?.progress !== undefined) {
+      return savedTimers[id].progress;
+    } else {
+      return time > 0 ? (time / seconds) * 100 : 0;
+    }
   });
+  
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const [alertModal, setAlertModal] = useState(false);
+  const [halfwayAlert , setHalfwayAlert] = useState(false)
+
 
   useEffect(() => {
     const savedTimers = JSON.parse(localStorage.getItem("timerStates")) || {};
-    savedTimers[id] = { time, isRunning, progress };
+
+    const currentIsRunning = time === 0 ? false : isRunning;
+    
+    if (time === 0 && isRunning) {
+      setIsRunning(false);
+    }
+    
+    savedTimers[id] = { 
+      time, 
+      isRunning: currentIsRunning, 
+      progress 
+    };
     localStorage.setItem("timerStates", JSON.stringify(savedTimers));
   }, [time, isRunning, progress, id]);
 
+  
   useEffect(() => {
-    if (isRunning) {
+   
+    if (isRunning && time > 0) {
       timerRef.current = setInterval(() => {
         setTime((prevTime) => {
           if (prevTime > 0) {
-            setProgress(((prevTime - 1) / seconds) * 100);
-            return prevTime - 1;
+            const newTime = prevTime - 1;
+            setProgress((newTime / seconds) * 100);
+            newTime === Math.floor(seconds/2) && setHalfwayAlert(true)
+            return newTime;
           }
-          setProgress(0);
-          handleHistory(name, seconds);
-          clearInterval(timerRef.current);
-          timerRef.current = null;
-          setIsRunning(false);
-          return 0;
+          
+         
         });
       }, 1000);
+    } else if (time === 0 && isRunning) {
+      setHalfwayAlert(false)
+      setAlertModal(true)
+       handleHistory(name, seconds);
+      setIsRunning(false);
     }
 
+   
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [isRunning]);
+  }, [isRunning, time, seconds]);
+
 
   useEffect(() => {
     if (category[1] === "StartAll") {
-      handleStart();
+      if (time > 0) {
+        handleStart();
+      }
     }
     if (category[1] === "PauseAll") {
       handlePause();
@@ -66,6 +99,7 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
   }, [category[1]]);
@@ -108,31 +142,15 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
   };
 
   const handleStart = () => {
-    if (!isRunning) {
+ 
+    if (!isRunning && time > 0) {
       setIsRunning(true);
-      timerRef.current = setInterval(() => {
-        setTime((prevTime) => {
-          if (prevTime > 0) {
-            setProgress(((prevTime - 1) / seconds) * 100);
-
-            return prevTime - 1;
-          }
-          setProgress(0);
-          handleHistory(name, seconds);
-          clearInterval(timerRef.current);
-          timerRef.current = null;
-          setIsRunning(false);
-          return 0;
-        });
-      }, 1000);
     }
   };
 
   const handlePause = () => {
     if (isRunning) {
       setIsRunning(false);
-      clearInterval(timerRef.current);
-      timerRef.current = null;
     }
   };
 
@@ -159,36 +177,40 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
     handleDelete(category[0], id);
   };
 
+  const onCancel = ()=>{
+    setAlertModal(false)
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center justify-between p-4 space-x-4">
-        <div className="h-2 w-[40%] bg-gray-400 min-w-[30%] rounded-md">
+       {window.innerWidth > 640 && <div className="h-2 w-[40%] bg-gray-400 min-w-[30%] rounded-md">
           <div
             className="h-full bg-indigo-600 rounded-md"
             style={{ width: `${progress}%` }}
           ></div>
-        </div>
-        <div className="text-2xl font-bold">{formatTime(time)}</div>
+        </div>}
+        <div className="sm:text-xl md:text-2xl text-sm font-bold">{formatTime(time)}</div>
         <div
           className={`${
-            isRunning
+            isRunning && time > 0
               ? "text-indigo-600"
               : time === 0
               ? "text-green-600"
               : "text-red-600"
           }`}
         >
-          {isRunning ? "Running" : time === 0 ? "Completed" : "Paused"}
+          {isRunning && time > 0 ? "Running" : time === 0 ? "Completed" : "Paused"}
         </div>
         <div className="space-x-3 flex items-center justify-center">
           <button
-            className="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="md:px-3 md:py-2 py-1 px-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             onClick={() => setIsOpenModal((prev) => !prev)}
           >
             Focus
           </button>
           <button
-            className="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="md:px-3 md:py-2 py-1 px-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             onClick={(e) => toDelete(e)}
           >
             X
@@ -211,6 +233,8 @@ const Timer = ({ seconds, handleDelete, name, category, id }) => {
           </div>
         </div>
       )}
+      {halfwayAlert && <AlertComponent text= {'You are Halfway there, keep up!'} onCancel={onCancel}  activity = {name} header={'Reminder !!!'} />}
+      {alertModal && <AlertComponent text= {'you have completed your Activity'} onCancel={onCancel}  activity = {name} header = {'congratulations 🎉'} />}
     </div>
   );
 };

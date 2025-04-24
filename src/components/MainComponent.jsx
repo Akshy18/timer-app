@@ -148,14 +148,15 @@ const MainComponent = () => {
       {category.map((item, index) => {
         return (
           <div key={index} className="w-[90%] mx-auto my-3">
-            <div className="w-full h-[10vh] border-b-4 border-indigo-600 shadow-b-2xl rounded-xl flex items-center justify-between px-4">
-              <div className="text-2xl">
+            <div className={`w-full h-[15vh] border-b-4 border-indigo-600 shadow-b-2xl rounded-xl flex ${ window.innerWidth <= 640 && 'flex-col'} items-center justify-between px-4`}>
+              <div className="sm:text-xl md:text-2xl text-lg font-bold">
                 {" "}
                 {item[0].charAt(0).toUpperCase() + item[0].slice(1)}
               </div>
-              <div className="flex items-center justify-between space-x-3">
+            
+              <div className={`${ window.innerWidth <= 640 && 'w-full'} flex items-center justify-between space-x-3 pb-4`}>
                 <select
-                  className="w-full px-2 py-2 border text-gray-700 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 cursor-pointer pr-10"
+                  className="w-[9rem] px-2 py-2 border text-gray-700 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 cursor-pointer pr-10"
                   id="Action"
                   name="Action"
                   value={item[1]}
@@ -166,9 +167,10 @@ const MainComponent = () => {
                   <option value="PauseAll">PauseAll</option>
                   <option value="ResetAll">ResetAll</option>
                 </select>
+                <div className="flex items-center">
                 <button
                   onClick={() => handleDeleteCategory(item[0])}
-                  className="px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="md:px-3 md:py-2 py-1 px-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   delete
                 </button>
@@ -182,6 +184,7 @@ const MainComponent = () => {
                     <IoIosArrowDown size={40} color="indigo" />
                   )}
                 </button>
+                </div>
               </div>
             </div>
             <div

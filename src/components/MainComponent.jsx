@@ -187,7 +187,7 @@ const MainComponent = () => {
             {/* Category header with controls */}
             <div className={`w-full h-[15vh] border-b-4 border-indigo-600 shadow-b-2xl rounded-xl flex ${window.innerWidth <= 640 && 'flex-col'} items-center justify-between px-4`}>
               {/* Category title */}
-              <div className="sm:text-xl md:text-2xl text-lg font-bold truncate">
+              <div className="w-full sm:text-xl md:text-2xl text-lg font-bold truncate">
                 {" "}
                 {item[0].charAt(0).toUpperCase() + item[0].slice(1)}
               </div>
